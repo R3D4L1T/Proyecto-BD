@@ -273,8 +273,49 @@ CREATE TABLE Logs (
     FOREIGN KEY (IDUsuario) REFERENCES Usuarios(IDUsuario)
 )
 GO
-=======
-CREATE TABLE PPRODUCTO(
-ID_PRODUCTO INT PRIMARY KEY NOT NULL
+
+--ALTERAMOS LA TABLA PROVEEDOR YA QUE FALTÓ RELACIONAR CON PRODUCTO
+ALTER TABLE Productos
+ADD  ProveedorID INT
+
+ALTER TABLE Productos
+ADD CONSTRAINT FK_ProveedorID
+FOREIGN KEY (ProveedorID) REFERENCES Proveedores(IDProveedor)
+GO
+
+
+--ALTERAMOS LA TABLA PROVEEDOR YA QUE FALTÓ RELACIONAR CON INVENTARIO
+-- Agregar la columna ProveedorID a la tabla Inventario
+ALTER TABLE Inventario
+ADD ProveedorID INT
+
+-- Establecer la clave externa en la columna ProveedorID
+ALTER TABLE Inventario
+ADD CONSTRAINT FK_ProveedorID
+FOREIGN KEY (ProveedorID) REFERENCES Proveedores(IDProveedor)
+GO
+
+--
+-- Crear la tabla PedidosProveedores
+CREATE TABLE PedidosProveedores (
+    PedidoProveedorID INT PRIMARY KEY IDENTITY(1,1),
+    ProveedorID INT,
+    FechaPedido DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (ProveedorID) REFERENCES Proveedores(IDPROVEEDOR)
 )
->>>>>>> ef8fd63227349bf8e3e5a78add331c725f6fafc6
+GO
+
+-- Crear la tabla ItemsPedidosProveedores
+CREATE TABLE ItemsPedidosProveedores (
+    ItemPedidoProveedorID INT PRIMARY KEY IDENTITY(1,1),
+    PedidoProveedorID INT,
+    ProductoID INT,
+    Cantidad INT,
+    Precio DECIMAL(10, 2),
+    FOREIGN KEY (PedidoProveedorID) REFERENCES PedidosProveedores(PedidoProveedorID),
+    FOREIGN KEY (ProductoID) REFERENCES Productos(IDProducto)
+)
+GO
+
+
+
